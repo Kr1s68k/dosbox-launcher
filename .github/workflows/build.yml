@@ -1,0 +1,57 @@
+name: Build standalone packages
+
+# Manual runs (Actions tab -> "Run workflow") and version tags (v1.0.0 etc.)
+# trigger a real build on all three platforms. PyInstaller can't
+# cross-compile - each OS's package has to be built ON that OS, which is
+# exactly what this matrix gets for free from GitHub's own runners, without
+# needing a real Windows PC or Mac.
+"on":
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            artifact_name: dosbox-launcher-linux
+            artifact_path: dist/dosbox-launcher
+          - os: windows-latest
+            artifact_name: dosbox-launcher-windows
+            artifact_path: dist/dosbox-launcher
+          - os: macos-latest
+            artifact_name: dosbox-launcher-macos
+            artifact_path: "dist/DOSBox Launcher.app"
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # macOS only: iconutil only exists on a real Mac, so the .icns the
+      # .spec file expects (resources/AppIcon.icns) is generated here, right
+      # before the build, from the .iconset already checked into the repo.
+      - name: Generate macOS .icns
+        if: runner.os == 'macOS'
+        run: iconutil -c icns resources/AppIcon.iconset -o resources/AppIcon.icns
+
+      - name: Build with PyInstaller
+        run: pyinstaller dosbox-launcher.spec
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: ${{ matrix.artifact_path }}

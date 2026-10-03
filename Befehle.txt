@@ -1,0 +1,22 @@
+Programm aufrufen:
+
+cd ~/dosbox-launcher
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+.venv/bin/python main.py
+
+
+Kompilat und Programmshortcut erstellen:
+
+cd ~/dosbox-launcher
+./build_linux.sh
+./install_linux.sh
+
+
+mkdir -p ~/.var/app/io.github.dosbox-staging/config/dosbox/soundcanvas-roms
+mkdir -p /tmp/sc55extract
+unzip -q "/home/deck/Downloads/Nuked-SC55-CLAP-ROM-files.zip" -d /tmp/sc55extract
+cp -r /tmp/sc55extract/Nuked-SC55-CLAP-ROM-files/Nuked-SC55-Resources/ROMs/. ~/.var/app/io.github.dosbox-staging/config/dosbox/soundcanvas-roms/
+find ~/.var/app/io.github.dosbox-staging/config/dosbox/soundcanvas-roms/ -name ".DS_Store" -delete
+rm -rf /tmp/sc55extract
+ls ~/.var/app/io.github.dosbox-staging/config/dosbox/soundcanvas-roms/

@@ -1,0 +1,13 @@
+PySide6
+pyinstaller
+ddgs
+Pillow
+# Joystick input for the starfield spaceship. evdev-binary (not plain evdev)
+# - ships a prebuilt wheel instead of compiling against Linux kernel headers
+# at install time, which isn't guaranteed to be available; installs as the
+# same "evdev" package either way. Linux-only (evdev is a binding for the
+# Linux kernel's input subsystem - no Windows/macOS wheel exists at all) -
+# the marker keeps pip from even attempting it on those platforms; the code
+# already handles its absence gracefully (app/joystick_input.py's own
+# try/except import - no joystick support there, nothing else breaks).
+evdev-binary; sys_platform == "linux"

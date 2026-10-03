@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# PyInstaller build output
+build/
+dist/
+
+# Runtime app data - settings, the user's actual game list, cover art cache.
+# Personal/user-specific, never meant to be shared or published.
+data/
+
+# Local Claude Code project config
+.claude/
+
+# Unreferenced personal/scratch file, not used by any code path
+joy.jpg
+
+# OS cruft
+.DS_Store
+Thumbs.db
