@@ -3,6 +3,8 @@
 Kleine GUI-Anwendung, um DOS-Programme aus ZIP-/RAR-Archiven per Doppelklick
 über DOSBox Staging oder DOSBox-X zu starten.
 
+![Demo](resources/demo.gif)
+
 ## Funktionen
 
 - Liste von Programmen verwalten (hinzufügen, bearbeiten, löschen, per ▲/▼ sortieren)
