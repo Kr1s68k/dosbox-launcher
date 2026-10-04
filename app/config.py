@@ -33,6 +33,16 @@ BACKUP_FILE = CONFIG_DIR / "programs.json.bak"
 # automatic migration so nobody loses their existing game list.
 _LEGACY_CONFIG_FILE = Path.home() / ".config" / "dosbox-launcher" / "programs.json"
 
+# Bundled into every published build (see dosbox-launcher.spec's datas) -
+# one example program entry (settings + a cached placeholder cover, no real
+# game archive) so a fresh install shows a populated, demonstrably-working
+# list instead of either a blank one or, worse, a developer's own real
+# library ending up in a public release. Only seeded on a genuinely frozen
+# build's very first run (see load_config()) - local dev mode
+# (.venv/bin/python main.py) never touches this, always starts from
+# whatever's really in data/ like before.
+_EXAMPLE_DATA_DIR = APP_DIR / "example_data"
+
 VARIANT_STAGING = "staging"
 VARIANT_X = "x"
 
@@ -285,10 +295,31 @@ class AppConfig:
         return str(Path(self.games_root) / p)
 
 
+def _seed_example_data() -> None:
+    """Copies the bundled example_data/ (one placeholder program entry +
+    its cover) into data/, so a genuinely frozen build's very first run
+    isn't just a blank list. See _EXAMPLE_DATA_DIR's own comment for why
+    this only ever runs for a frozen build, never in dev mode."""
+    example_programs = _EXAMPLE_DATA_DIR / "programs.json"
+    if not example_programs.is_file():
+        return
+    CONFIG_DIR.mkdir(parents=True, exist_ok=True)
+    shutil.copy(example_programs, CONFIG_FILE)
+    example_covers = _EXAMPLE_DATA_DIR / "covers"
+    if example_covers.is_dir():
+        dest_covers = CONFIG_DIR / "covers"
+        dest_covers.mkdir(parents=True, exist_ok=True)
+        for cover_file in example_covers.iterdir():
+            shutil.copy(cover_file, dest_covers / cover_file.name)
+
+
 def load_config() -> AppConfig:
     if not CONFIG_FILE.exists() and _LEGACY_CONFIG_FILE.exists():
         CONFIG_DIR.mkdir(parents=True, exist_ok=True)
         shutil.copy(_LEGACY_CONFIG_FILE, CONFIG_FILE)
+
+    if not CONFIG_FILE.exists() and getattr(sys, "frozen", False):
+        _seed_example_data()
 
     if not CONFIG_FILE.exists():
         return AppConfig()

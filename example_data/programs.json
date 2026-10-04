@@ -1,0 +1,11 @@
+{
+  "programs": [
+    {
+      "name": "Beispiel-Eintrag (zum Bearbeiten)",
+      "zip_path": "beispiel/mein-spiel.zip",
+      "executable": "SPIEL.EXE",
+      "rating": 7,
+      "notes": "Dies ist ein Beispiel-Eintrag mit Bewertung, Cover und Notizen, damit die Liste nach der Installation nicht leer ist. Über 'Bearbeiten' durch ein eigenes Spiel ersetzen: eigenes ZIP/RAR-Archiv und Startprogramm angeben."
+    }
+  ]
+}

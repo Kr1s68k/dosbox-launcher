@@ -3,7 +3,7 @@ import sys
 
 from PyInstaller.utils.hooks import collect_all
 
-datas = [('resources', 'resources')]
+datas = [('resources', 'resources'), ('example_data', 'example_data')]
 binaries = []
 hiddenimports = []
 
